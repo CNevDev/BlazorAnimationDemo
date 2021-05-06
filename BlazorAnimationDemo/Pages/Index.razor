@@ -3,10 +3,13 @@
 <div class="row justify-content-center">
 	<div class="col-12 col-md-4 text-center">
 		<div class="animationContainer">
+			@* The class attribute uses C# string interpolation and the _counterClass field to add / remove the 'updating' class. *@
 			<div class=@($"counterDisplay {_counterClass}")>
+				@* The _currentCount field from C# code is displayed here. *@
 				Current Count : @_currentCount
 			</div>
 		</div>
+		@* The disabled attribute uses the _buttonDisabled field to decide if enabled. *@
 		<button class="btn btn-primary" @onclick="IncrementCount" disabled=@(_buttonDisabled ? "disabled" : null)>Increment Counter</button>
 		<div class="mt-5">
 			<p>Find out more and read the blog post here : 
@@ -17,8 +20,9 @@
 </div>
 
 <style>
+	/* Add perspective to make the sping "pop off the page". */
 	.animationContainer {
-		perspective: 1200px;
+		perspective: 1200px; /*lkjlkjslkj*/
 	}
 
 	.counterDisplay {
@@ -32,10 +36,12 @@
 		margin-bottom: 50px;
 	}
 
+	/* Set up the class to add to implement the animation with a 2 second duration. */
 	.updating {
 		animation: spin 2s;
 	}
 
+	/* Set up the animation itself.*/
 	@@keyframes spin {
 		from {
 			transform: rotateY(0);
@@ -58,8 +64,11 @@
 	{
 		_buttonDisabled = true;
 		_counterClass = "updating";
+		// Wait one second to increment count, so it happens in the middle of the animation.
 		await Task.Delay(1000);
 		_currentCount++;
+		// Call this to immediately update the rendering of _currentCount,
+		// otherwise it will wait till end of this method to redraw the count.
 		StateHasChanged();
 		await Task.Delay(1000);
 		_buttonDisabled = false;
